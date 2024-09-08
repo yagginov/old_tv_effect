@@ -54,3 +54,9 @@ This command will launch Visual Studio Code with the current directory set as th
 ./bin/old_tv_effect.exe
 ```
 This will launch the compiled executable.
+
+
+## Screenshots
+
+![Screenshot_01](screenshot_01.png)
+![Screenshot_02](screenshot_02.png)
