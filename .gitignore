@@ -25,7 +25,6 @@ dep/
 *.dSYM/
 
 # IDE specific files
-.vscode/
 *.suo
 *.user
 *.userosscache

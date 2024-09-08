@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/dep/GLFW/include",
+                "${workspaceFolder}/dep/GLEW/include",
+                "${workspaceFolder}/dep"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "browse": {
+                "path": [
+                "${workspaceFolder}/dep/GLFW/include",
+                "${workspaceFolder}/dep/GLEW/include",
+                "${workspaceFolder}/dep",
+                "${workspaceFolder}/src"
+            ]
+            },
+            "intelliSenseMode": "windows-msvc-x86"
+        }
+    ],
+    "version": 4
+}

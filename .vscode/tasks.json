@@ -1,0 +1,63 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Create bin folder",
+            "type": "shell",
+            "command": "mkdir",
+            "args": [
+                "${workspaceFolder}/bin",
+            ]
+        },
+        {
+            "label": "Build project",
+            "type": "shell",
+            "command": "cl.exe",
+            "args": [
+                "/permissive-",
+                "/Zc:wchar_t",
+                "/Zc:inline",
+                "/WX-",
+                "/Gd",
+                "/MD",
+                "/EHsc",
+                // Include directory:
+                "/I${workspaceFolder}/src",        
+                "/I${workspaceFolder}/dep/GLFW/include",
+                "/I${workspaceFolder}/dep/GLEW/include", 
+                "/I${workspaceFolder}/dep",
+
+                "/D", "GLEW_STATIC",    // Define macro GLEW_STATIC
+                "/D", "WIN32",          // Define macro WIN32
+                "/Fe:${workspaceFolder}/bin/old_tv_effect.exe",
+                "${workspaceFolder}/src/*.cpp",
+
+                "/link",    
+                "/OUT:${workspaceFolder}/bin/old_tv_effect.exe",
+                "/NXCOMPAT",
+                "/DYNAMICBASE",
+                // Library names
+                "glfw3.lib",
+                "User32.lib",
+                "Gdi32.lib",
+                "Shell32.lib",
+                "Opengl32.lib",
+                "glew32s.lib",
+                "/DEBUG", 
+                "/MACHINE:X86",         // Specify the target machine architecture
+                "/SUBSYSTEM:CONSOLE",   // Set the subsystem type to Console
+                // Library path
+                "/LIBPATH:${workspaceFolder}/dep/GLFW/lib-vc2022",
+                "/LIBPATH:${workspaceFolder}/dep/GLEW/lib/Release/Win32",
+                "/TLBID:1"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ]
+        },
+        {
+            "label": "Build_x86",
+            "dependsOn": ["Create bin folder", "Build project"]
+        }
+    ]
+}
