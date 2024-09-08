@@ -2,7 +2,7 @@
 
 in vec2 texCoord;
 
-uniform vec2 scale = vec2(4.0, 4.0);
+uniform vec2 scale = vec2(2.0, 2.0);
 uniform sampler2D renderedTexture;
 
 out vec4 FragColor;

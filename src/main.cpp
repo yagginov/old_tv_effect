@@ -15,12 +15,14 @@
 const unsigned int SCR_WIDTH = 1500;
 const unsigned int SCR_HEIGHT = 800; 
 
+const unsigned int SCALE = 8;
+
+int width = SCR_WIDTH / SCALE;
+int height = SCR_HEIGHT / SCALE;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-
-struct WindowData {
-    Shader* shader;
-};
+void setup_framebuffer(GLuint framebuffer, GLuint deathbuffer, GLuint texture);
 
 int main()
 {
@@ -46,69 +48,66 @@ int main()
     //// init callback functions----------------------
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     
-
+    // glew initialization
     if (glewInit() != GLEW_OK)
     {
         std::cerr << "Failed to initialize GLEW" << std::endl;
         return -1;
     }
+    
+    framebuffer_size_callback(window, SCR_WIDTH, SCR_HEIGHT);
 
     //// Outputting info about opengl version-------
     std::cout << glGetString(GL_VERSION) << "\n";
     std::cout << "Start Old Tellevision Effect Program" << std::endl;
 
+    // Create two shader programs
     Shader shader("src\\shaders\\v_shader.shader", "src\\shaders\\f_shader.shader");
     Shader base_shader("src\\shaders\\base_v_shader.shader", "src\\shaders\\base_f_shader.shader");
 
-    WindowData windowData;
-    windowData.shader = &shader;
-    glfwSetWindowUserPointer(window, &windowData);
-
-    framebuffer_size_callback(window, SCR_WIDTH, SCR_HEIGHT);
-
     float vertices[] = 
     {
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-        -0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
 
     unsigned int VBO;
@@ -122,8 +121,10 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
 
     //// Disabled VBO, VAO---------------
     glBindVertexArray(0);
@@ -161,15 +162,18 @@ int main()
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    // Create additional framebuffer
+    GLuint framebuffer, texture, depthBuffer;
 
+    glGenFramebuffers(1, &framebuffer);
+    glGenTextures(1, &texture);
+    glGenRenderbuffers(1, &depthBuffer);
+    setup_framebuffer(framebuffer, depthBuffer, texture);
 
     double deltaTime = 0.0;
     double lastFrame = 0.0;
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)(SCR_WIDTH / 4) /  (float)(SCR_HEIGHT / 4), 0.1f, 100.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
-    
-
+    // Main cycle
     while (!glfwWindowShouldClose(window))
     {
         double currentFrame = glfwGetTime();
@@ -178,67 +182,52 @@ int main()
 
         processInput(window);
 
+        //// Render base image in small frame buffer
         
+        setup_framebuffer(framebuffer, depthBuffer, texture);
 
-
-
-//-------------------------------------------------------------------//
-
-        int width = SCR_WIDTH / 4;
-        int height = SCR_HEIGHT / 4;
-
-        GLuint framebuffer, texture;
-
-        glGenFramebuffers(1, &framebuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            std::cerr << "Framebuffer is not complete!" << std::endl;
-        }
-
+        glEnable(GL_DEPTH_TEST);
         glViewport(0, 0, width, height);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         base_shader.use();
+
+        // Create Model matrix
         glm::mat4 model = glm::mat4(1.0f);
         float time = glfwGetTime();
         model = glm::rotate(model, time, glm::vec3(0.5f, 1.0f, 0.0f));
+
+        // Create Projection and View matrix
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)::width /  (float)::height, 0.1f, 100.0f);
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
 
         base_shader.setMat4("model", model);
         base_shader.setMat4("view", view);
         base_shader.setMat4("projection", projection);
 
+        // Draw cube
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
         glBindVertexArray(0);
+        glDisable(GL_DEPTH_TEST);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//--------------------------------------------------------------------------------//
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-        //// Render here ----------------------------------------------------
+        //// Render all window with old tv effect
+        glViewport(0, 0, width * SCALE, height * SCALE);
+
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        shader.use();
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
-
-        shader.use();
         shader.setInt("renderedTexture", 0);
 
         glBindVertexArray(VAO_full);
@@ -253,6 +242,8 @@ int main()
         glfwPollEvents();
     }
 
+
+
     return 0;
 }
 
@@ -263,5 +254,28 @@ void processInput(GLFWwindow* window)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    ::width = width / SCALE;
+    ::height = height / SCALE;
+}
+
+void setup_framebuffer(GLuint framebuffer, GLuint depthbuffer, GLuint texture)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, depthbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthbuffer);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cerr << "Framebuffer is not complete!" << std::endl;
+    }
 }
