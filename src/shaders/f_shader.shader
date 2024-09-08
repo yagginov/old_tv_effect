@@ -1,11 +1,14 @@
 #version 330 core
 
-uniform vec2 scale = vec2(7.0, 12.0);
+in vec2 texCoord;
+
+uniform vec2 scale = vec2(4.0, 4.0);
+uniform sampler2D renderedTexture;
 
 out vec4 FragColor;
 
 void main() {
-    vec4 original_color = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 original_color = texture(renderedTexture, texCoord);
 
     vec2 stripe_index = mod(floor(gl_FragCoord.xy / scale), 4.0);
 
