@@ -1,0 +1,49 @@
+# Compiled object files
+*.o
+*.obj
+*.lo
+*.a
+*.lib
+*.so
+*.dll
+
+# Executables
+*.out
+*.exe
+*.app
+
+# Build directories
+bin/
+dep/
+
+# Debug files
+*.d
+*.gch
+*.pch
+
+# Dependency directories
+*.dSYM/
+
+# IDE specific files
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Precompiled headers
+*.gch
+*.pch
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Ignore the `dep` directory if you don't want to version control dependencies
+dep/
+bin/
