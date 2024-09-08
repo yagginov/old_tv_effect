@@ -242,14 +242,27 @@ int main()
         glfwPollEvents();
     }
 
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO_full);
+    glDeleteVertexArrays(1, &VAO_full);
 
+    glDeleteTextures(1, &texture);
+    glDeleteRenderbuffers(1, &depthBuffer);
+    glDeleteFramebuffers(1, &framebuffer);
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
 
     return 0;
 }
 
 void processInput(GLFWwindow* window)
 {
-
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
+    {
+        glfwSetWindowShouldClose(window, true);
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
