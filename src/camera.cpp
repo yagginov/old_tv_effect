@@ -114,3 +114,8 @@ void Camera::reset()
     position = default_position;
     Zoom = 45.0f;
 }
+
+glm::vec3 Camera::get_pos() const
+{
+    return position;
+}

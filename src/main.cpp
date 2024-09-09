@@ -244,6 +244,7 @@ int main(int argc, char* argv[])
         base_shader.setMat4("model", model);
         base_shader.setMat4("view", view);
         base_shader.setMat4("projection", projection);
+        base_shader.setVec3("eyePos", camera.get_pos());
 
         // Draw cube
         glBindVertexArray(VAO);

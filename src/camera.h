@@ -52,6 +52,7 @@ public:
 
     void add_position(glm::vec3 pos);
     void reset();
+    glm::vec3 get_pos() const;
 
 private:
     void updateCameraVectors();
