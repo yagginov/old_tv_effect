@@ -57,8 +57,10 @@ scale is a value multiple of 4 (4, 8, 12, 16 ...). If you write 1, the effect wi
 
 This will launch the compiled executable.
 
-You can rotate your image. For this use WASD buttons. 
-For scaling use scroll.
+##### Possibilities
+ - You can rotate the image using the WASD keys. 
+ - To zoom in, use the mouse wheel. 
+ - To move, use the arrow on the keyboard.
 
 
 ## Screenshots

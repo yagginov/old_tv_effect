@@ -24,7 +24,8 @@ const unsigned int SCR_HEIGHT = 800;
 unsigned int scale = 4;
 
 // Turning Speed
-const float ANGLE_TO_SECONDS = 90.0f;
+const float ANGLE_PER_SECONDS = 90.0f;
+const float POINTS_PER_SECONDS = 0.5f;
 
 // Small framebuffer size
 int width = SCR_WIDTH / scale;
@@ -310,25 +311,44 @@ void processInput(GLFWwindow* window, float delta)
     // Setting image rotation
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
     {
-        windowData->model = glm::rotate(windowData->model, glm::radians(ANGLE_TO_SECONDS * delta), glm::vec3(-1.0f, 0.0f, 0.0f));
+        windowData->model = glm::rotate(windowData->model, glm::radians(ANGLE_PER_SECONDS * delta), glm::vec3(-1.0f, 0.0f, 0.0f));
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
     {
-        windowData->model = glm::rotate(windowData->model, glm::radians(ANGLE_TO_SECONDS * delta), glm::vec3(1.0f, 0.0f, 0.0f));
+        windowData->model = glm::rotate(windowData->model, glm::radians(ANGLE_PER_SECONDS * delta), glm::vec3(1.0f, 0.0f, 0.0f));
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
     {
-        windowData->model = glm::rotate(windowData->model, glm::radians(ANGLE_TO_SECONDS * delta), glm::vec3(0.0f, 1.0f, 0.0f));
+        windowData->model = glm::rotate(windowData->model, glm::radians(ANGLE_PER_SECONDS * delta), glm::vec3(0.0f, 1.0f, 0.0f));
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
-        windowData->model = glm::rotate(windowData->model, glm::radians(ANGLE_TO_SECONDS * delta), glm::vec3(0.0f, -1.0f, 0.0f));
+        windowData->model = glm::rotate(windowData->model, glm::radians(ANGLE_PER_SECONDS * delta), glm::vec3(0.0f, -1.0f, 0.0f));
     }
 
-    // Reset image rotation
+    // Setting move
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) 
+    {
+        windowData->camera->add_position(glm::vec3(0.0f, POINTS_PER_SECONDS * delta, 0.0f));
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        windowData->camera->add_position(glm::vec3(0.0f, -POINTS_PER_SECONDS * delta, 0.0f));    
+    }
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+        windowData->camera->add_position(glm::vec3(-POINTS_PER_SECONDS * delta, 0.0f, 0.0f));    
+    }
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+        windowData->camera->add_position(glm::vec3(POINTS_PER_SECONDS * delta, 0.0f, 0.0f));    
+    }
+
+    // Reset image rotation and camera movement
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) 
     {
         windowData->model = glm::rotate(glm::mat4(1.0), glm::radians(0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+        windowData->camera->reset();
     }
 }
 

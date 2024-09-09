@@ -1,10 +1,11 @@
 #include "camera.h"
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : 
+Camera::Camera(glm::vec3 p_position, glm::vec3 up, float yaw, float pitch) : 
     Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), 
     MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
-    Position = position;
+    default_position = p_position;
+    position = p_position;
     WorldUp = up;
     Yaw = yaw;
     Pitch = pitch;
@@ -16,7 +17,7 @@ Camera::Camera(float posX, float posY, float posZ,
     float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), 
     MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
-    Position = glm::vec3(posX, posY, posZ);
+    default_position = glm::vec3(posX, posY, posZ);
     WorldUp = glm::vec3(upX, upY, upZ);
     Yaw = yaw;
     Pitch = pitch;
@@ -25,7 +26,7 @@ Camera::Camera(float posX, float posY, float posZ,
 
 glm::mat4 Camera::GetViewMatrix()
 {
-    return glm::lookAt(Position, Position + Front, Up);
+    return glm::lookAt(position, position + Front, Up);
 }
 
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
@@ -36,19 +37,19 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
     float velocity = MovementSpeed * deltaTime;
     if (direction == FORWARD)
     {
-        Position += front * velocity;
+        default_position += front * velocity;
     }      
     if (direction == BACKWARD)
     {
-        Position -= front * velocity;
+        default_position -= front * velocity;
     }        
     if (direction == LEFT) 
     {
-        Position -= Right * velocity;
+        default_position -= Right * velocity;
     }       
     if (direction == RIGHT) 
     {
-        Position += Right * velocity;
+        default_position += Right * velocity;
     }
 }
 
@@ -101,4 +102,15 @@ void Camera::updateCameraVectors()
 
     Right = glm::normalize(glm::cross(Front, WorldUp));  
     Up = glm::normalize(glm::cross(Right, Front));
+}
+
+void Camera::add_position(glm::vec3 pos)
+{
+    position += pos;
+}
+
+void Camera::reset()
+{
+    position = default_position;
+    Zoom = 45.0f;
 }
