@@ -2,13 +2,18 @@
 
 in vec2 texCoord;
 
-uniform vec2 scale = vec2(2.0, 2.0);
+uniform vec2 scale = vec2(1.0, 1.0);
 uniform sampler2D renderedTexture;
 
 out vec4 FragColor;
 
 void main() {
     vec4 original_color = texture(renderedTexture, texCoord);
+    if (scale.x == 0.0)
+    {
+        FragColor = original_color;
+        return;
+    }
 
     vec2 stripe_index = mod(floor(gl_FragCoord.xy / scale), 4.0);
 
@@ -31,4 +36,6 @@ void main() {
             FragColor = vec4(0.0, 0.0, original_color.z, 1.0);
         }
     }
+
+    //FragColor = original_color;
 }

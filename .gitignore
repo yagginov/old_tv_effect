@@ -46,3 +46,4 @@ dep/
 # Ignore the `dep` directory if you don't want to version control dependencies
 dep/
 bin/
+textures/

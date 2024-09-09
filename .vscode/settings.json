@@ -54,7 +54,10 @@
         "xutility": "cpp",
         "vector": "cpp",
         "algorithm": "cpp",
-        "optional": "cpp"
+        "optional": "cpp",
+        "string": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp"
     },
     "files.exclude": {
         "**/*.rpyc": true,

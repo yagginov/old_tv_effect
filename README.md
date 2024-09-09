@@ -51,12 +51,17 @@ This command will launch Visual Studio Code with the current directory set as th
 4. Run the Program:
  - Open a terminal and execute the following command:
 ```bash
-./bin/old_tv_effect.exe
+./bin/old_tv_effect.exe "path\to\your\photo" scale
 ```
+scale is a value multiple of 4 (4, 8, 12, 16 ...). If you write 1, the effect will not be applied.
+
 This will launch the compiled executable.
+
+You can rotate your image. For this use WASD buttons. 
+For scaling use scroll.
 
 
 ## Screenshots
 
-![Screenshot_01](screenshot_01.png)
-![Screenshot_02](screenshot_02.png)
+![Screenshot_03](screenshot_03.png)
+![Screenshot_04](screenshot_04.png)
